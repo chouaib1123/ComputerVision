@@ -1,0 +1,10 @@
+video {
+  border: 5px solid black;
+  border-radius: 10px;
+}
+
+p {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}

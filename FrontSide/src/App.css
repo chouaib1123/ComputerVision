@@ -1,0 +1,34 @@
+.App {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+}
+.Hidder {
+  position: absolute;
+  z-index: 500;
+  width: 100%;
+  height: 85%;
+  bottom: 0;
+  left: 0;
+  background-color: grey;
+  opacity: 0.8;
+}
+.App:has(.show) {
+  background-color: grey;
+  .Hidder {
+    display: block;
+  }
+}
+
+.App:has(.hide) {
+  background-color: transparent;
+  .Hidder {
+    display: none;
+  }
+}
+
+.App .TheTwoFriends {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin: 50px;
+}
