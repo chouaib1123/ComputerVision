@@ -32,7 +32,7 @@ const VideoCapture = ({ isConnected }) => {
     if (isConnected && videoRef.current) {
       frameInterval = setInterval(() => {
         captureFrameAndSend();
-      }, 5000);
+      }, 2000);
     }
 
     return () => {

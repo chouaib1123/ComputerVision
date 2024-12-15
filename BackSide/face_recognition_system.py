@@ -36,19 +36,48 @@ class FaceRecognitionSystem:
             logger.error(f"Error processing {person.name}'s image: {str(e)}")
         return False
 
+    def preprocess_frame(self, frame):
+        """
+        Comprehensive image preprocessing pipeline for face detection
+        """
+        # 1. Initial color conversion and noise reduction
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        denoised = cv2.fastNlMeansDenoising(gray)
+        
+        # 2. Contrast Limited Adaptive Histogram Equalization (CLAHE)
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        enhanced = clahe.apply(denoised)
+        
+        # 3. Image sharpening using unsharp masking
+        gaussian = cv2.GaussianBlur(enhanced, (5,5), 2.0)
+        sharpened = cv2.addWeighted(enhanced, 1.5, gaussian, -0.5, 0)
+        
+        # 4. Bilateral filtering to preserve edges while reducing noise
+        bilateral = cv2.bilateralFilter(sharpened, 9, 75, 75)
+        
+        # 5. Convert back to RGB for face_recognition library
+        processed_frame = cv2.cvtColor(bilateral, cv2.COLOR_GRAY2RGB)
+        
+        # 6. Resize for efficiency
+        small_frame = cv2.resize(processed_frame, (0, 0), 
+                               fx=self.scale_factor, 
+                               fy=self.scale_factor)
+        
+        return small_frame
+
     def process_frame(self, frame, persons=None):
         """Process frame using cached encodings. Optional persons param to update cache."""
         try:
             if persons:
                 self.load_initial_faces(persons)
                 
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            small_frame = cv2.resize(rgb_frame, (0, 0), fx=self.scale_factor, fy=self.scale_factor)
-            face_locations = face_recognition.face_locations(small_frame)
+            # Apply preprocessing pipeline    
+            processed_frame = self.preprocess_frame(frame)
+            face_locations = face_recognition.face_locations(processed_frame)
             results = []
 
             if face_locations:
-                face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+                face_encodings = face_recognition.face_encodings(processed_frame, face_locations)
                 for face_encoding, face_location in zip(face_encodings, face_locations):
                     name = "Unknown"
                     for person_name, known_encoding in self.known_face_encodings.items():
