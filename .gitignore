@@ -1,0 +1,60 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+env/
+venv/
+ENV/
+.VENV/
+*.env/
+*.venv/
+
+# macOS
+.DS_Store
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Secrets and configuration
+.env
+*.ini
+*.cfg
+
+# Compiled and optimized Python files
+*.pyo
+*.pyc
+
+# Test result folders
+coverage/
+htmlcov/
+.tox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Build artifacts
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.iml
+
+# Debug files
+*.swp
+*.swo
+
+# Optional: Ignore user-specific and OS files
+Thumbs.db
