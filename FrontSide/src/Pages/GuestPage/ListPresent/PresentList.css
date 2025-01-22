@@ -1,0 +1,73 @@
+.List {
+  h2 {
+    font-size: 3rem;
+  }
+  margin: 0 20px;
+
+  .table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-header {
+    font-weight: bold;
+  }
+
+  .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .table-cell {
+    flex: 1;
+    text-align: start;
+    padding: 12px;
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .table-header .table-cell {
+    font-weight: bold;
+    background-color: #f5f5f5;
+  }
+
+  .table-body {
+    height: 60%;
+    overflow-y: scroll;
+  }
+
+  .table-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .table-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .table-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  .table-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+.presence-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.presence-status.present {
+  background-color: #e6ffe6;
+  color: #006600;
+}
+
+.presence-status.absent {
+  background-color: #ffe6e6;
+  color: #660000;
+}

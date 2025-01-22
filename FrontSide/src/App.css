@@ -1,4 +1,4 @@
-.App {
+.GuestPage {
   position: relative;
   z-index: 1;
   height: 100vh;
@@ -13,21 +13,21 @@
   background-color: grey;
   opacity: 0.8;
 }
-.App:has(.show) {
+.GuestPage:has(.show) {
   background-color: grey;
   .Hidder {
     display: block;
   }
 }
 
-.App:has(.hide) {
+.GuestPage:has(.hide) {
   background-color: transparent;
   .Hidder {
     display: none;
   }
 }
 
-.App .TheTwoFriends {
+.GuestPage .TheTwoFriends {
   display: grid;
   grid-template-columns: 1fr auto;
   margin: 50px;

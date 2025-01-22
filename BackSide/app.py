@@ -70,6 +70,7 @@ def process_frame():
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
+    image_path = None
     try:
         if 'name' not in request.form or 'image' not in request.files:
             return jsonify({"success": False, "error": "Missing data"}), 400
@@ -79,40 +80,27 @@ def upload_image():
         image_path = os.path.join(UPLOAD_FOLDER, image_file.filename)
         image_file.save(image_path)
 
-        # Try encoding first
-        try:
-            temp_person = Person(name=name, image_path=image_path)
-            if not face_system.add_person(temp_person):
-                os.remove(image_path)  # Clean up saved image
-                return jsonify({
-                    "success": False, 
-                    "error": "Could not detect face in image"
-                }), 400
-        except Exception as e:
-            os.remove(image_path)  # Clean up saved image
-            return jsonify({
-                "success": False,
-                "error": f"Face encoding failed: {str(e)}"
-            }), 400
-
-        # Only add to database if encoding succeeded
         session = presence_manager.Session()
         try:
             person = add_person(session, name, image_path)
-            session.commit()
+            face_system.add_person(person)
+            
+            # Emit updated persons data after successful addition
             persons_data = presence_manager.get_all_persons_with_presence()
             socketio.emit('persons_data', persons_data)
-            return jsonify({"success": True}), 200
+            
+            return jsonify({"success": True, "message": "Person added successfully"}), 200
         except Exception as e:
             session.rollback()
-            os.remove(image_path)  # Clean up saved image
-            return jsonify({"success": False, "error": str(e)}), 500
+            if os.path.exists(image_path):
+                os.remove(image_path)
+            return jsonify({"success": False, "error": f"Database error: {str(e)}"}), 500
         finally:
             session.close()
 
     except Exception as e:
         logger.error(f"Error uploading image: {str(e)}")
-        if os.path.exists(image_path):
+        if image_path and os.path.exists(image_path):
             os.remove(image_path)
         return jsonify({"success": False, "error": str(e)}), 500
 
